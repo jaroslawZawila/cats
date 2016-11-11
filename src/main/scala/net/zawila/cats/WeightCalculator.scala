@@ -1,5 +1,8 @@
 package net.zawila.cats
 
+import cats._
+import cats.implicits._
+
 trait Weightable {
   def weight: Int
 }
@@ -23,6 +26,13 @@ object WeightableProducts {
     override def weight(notepad: NotePad): Weightable = new Weightable {
       override def weight: Int = 10
     }}
+
+  implicit def listToWeightableList(products: List[Product]): List[Weightable] = {
+    products.map( x =>  x match {
+      case n: NotePad => implicitly[Weight[NotePad]].weight(n)
+      case b: Book => implicitly[Weight[Book]].weight(b)
+    })
+  }
 }
 
 object Main{
@@ -35,22 +45,13 @@ object Main{
 
     import WeightableProducts._
 
-    implicit def listToWeightableList(products: List[Product]): List[Weightable] = {
-      products.map( x =>  x match {
-        case n: NotePad => implicitly[Weight[NotePad]].weight(n)
-        case b: Book => implicitly[Weight[Book]].weight(b)
-        case w: Weightable => w
-      })
-    }
-
     val products = List(new Book(350), new NotePad, new NotePad)
     val productsWeight = WeightCalculator.calculate(products)
-
     println(s"Products weight: ${productsWeight}")
 
-//    val mixedList = List(new Book(350), new Apple)
-//    val mixedWeight = WeightCalculator.calculate(mixedList)
-//
-//    println(s"Mixed weight: ${mixedWeight}")
+    val mixedList = Semigroup[List[Weightable]].combine(List[Product](new NotePad), List(new Apple))
+    val mixedWeight = WeightCalculator.calculate(mixedList)
+
+    println(s"Mixed weight: ${mixedWeight}")
   }
 }
