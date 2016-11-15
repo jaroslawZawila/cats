@@ -41,24 +41,17 @@ object Kafka extends App {
 
   val propertiesConsumer = new java.util.Properties()
   propertiesConsumer.put("bootstrap.servers", "localhost:9092")
-  propertiesConsumer.put("group.id", "mygroup")
+  propertiesConsumer.put("group.id", "mygroup2")
   propertiesConsumer.put("auto.offset.reset", "earliest")
   propertiesConsumer.put("key.deserializer", "org.apache.kafka.common.serialization.IntegerDeserializer")
   propertiesConsumer.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer")
 
   val consumer = new KafkaConsumer[Integer, String](propertiesConsumer)
 
-  println(1)
   consumer.subscribe(List(topic).asJavaCollection)
 
-  println(2)
-  val msg: ConsumerRecords[Integer, String] = consumer.poll(10)
+  val msg: ConsumerRecords[Integer, String] = consumer.poll(10000)
 
-  println(3)
   msg.iterator().asScala.foreach(
-    x => println( s"Message body:  ${x.value()}")
-  )
-
-
-
+    x => println( s"Message body:  ${x.value()}"))
 }

@@ -19,7 +19,6 @@ services:
       KAFKA_ADVERTISED_HOST_NAME: localhost
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_HEAP_OPTS: "-Xmx2G -Xms2G"
-      KAFKA_CREATE_TOPICS: "test-topic-1:1:1"
     ports:
       - 9092:9092
     links:
