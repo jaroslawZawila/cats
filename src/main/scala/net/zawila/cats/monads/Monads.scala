@@ -37,6 +37,11 @@ object Monads {
 
   def main(args: Array[String]): Unit = {
     val r: Result[Int] = warning(100, "message1") flatMap (x => Warning(x*3, "Message 2"))
+
+    val r1: Result[Int] = warning(3, "some").map(x => {println(x); x * 101})
+
+    println(r1)
+
     println(r)
 
 
