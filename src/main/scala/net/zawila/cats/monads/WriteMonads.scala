@@ -24,6 +24,7 @@ object WriteMonads {
       } else {
         for {
           a <- slowly(factorial(n - 1))
+          _ = print(s"\n fact ${n} ${a * n}")
           _ <- Vector(s"fact ${n} ${a * n}").tell
         } yield  a * n
       }
